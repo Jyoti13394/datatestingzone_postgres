@@ -1,9 +1,7 @@
-import ast
-
 import pytest
 import pandas as pd
 import json
-from src.utils import validate_schema, validate_not_null
+from src.utils import validate_not_null, yearly_order_drop_status
 
 
 def run_validations(testcase, superstore_csv, db):
@@ -53,6 +51,10 @@ def run_validations(testcase, superstore_csv, db):
 
             print("Schema Validation passed (Excel vs db)")
             return True
+
+        elif testcase["TestCaseName"].startswith("% of Orders"):
+            return yearly_order_drop_status(superstore_csv,db_result )
+
 
     elif query_logic.startswith("CHECK_NOT_NULL"):
         not_null_cols = json.loads(expected)
