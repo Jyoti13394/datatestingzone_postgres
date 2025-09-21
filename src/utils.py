@@ -27,7 +27,7 @@ def yearly_order_drop_status(superstore_csv, db_result):
 
     #Compare
     if db_stats == csv_stats:
-        print("Year over year growth stats match (CSV Vs DB")
+        print("Year over year growth stats match (CSV Vs DB)")
         return True
     else:
         print("Mismatch found")
