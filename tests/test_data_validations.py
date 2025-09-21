@@ -3,7 +3,7 @@ import ast
 import pytest
 import pandas as pd
 import json
-from src.utils import validate_schema
+from src.utils import validate_schema, validate_not_null
 
 
 def run_validations(testcase, superstore_csv, db):
@@ -33,6 +33,30 @@ def run_validations(testcase, superstore_csv, db):
             db_result = [list(row) for row in db_result]
             print(db_result)
             return sorted(db_result) == sorted(csv_result)
+
+        elif testcase["TestCaseName"].startswith("Schema"):
+
+            db_schema = {col.lower().replace(" ", "_"): dtype.lower().replace(" ", "_") for col, dtype in db_result}
+            print("Actual Schema (db): ", db_schema)
+
+            expected_schema = json.loads(expected)
+            expected_schema = {col.lower().replace(" ", "_"): dtype.lower().replace(" ", "_") for col, dtype in expected_schema.items()}
+            print(f"Expected Schema (Excel): {expected_schema}")
+
+            # Compare only the expected subset
+            for col, dtype in expected_schema.items():
+                if col not in db_schema:
+                    print(f"Column missing in DB: {col}")
+                    return False
+                if db_schema[col] != dtype:
+                    print(f"Type Mismatch in {col}: expected {dtype}, got {db_schema[col]}")
+
+            print("Schema Validation passed (Excel vs db)")
+            return True
+
+    elif query_logic.startswith("CHECK_NOT_NULL"):
+        not_null_cols = json.loads(expected)
+        return validate_not_null(superstore_csv, not_null_cols)
 
     return False
 
