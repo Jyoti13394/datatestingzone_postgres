@@ -44,7 +44,7 @@ class DBConnection:
 #     host="aws-1-ap-south-1.pooler.supabase.com",
 #     dbname="postgres",
 #     user="postgres.rkxbktkiwgzcaksrcalw",
-#     password="Maldives786#",
+#     password="[Your Password]",
 #     port=6543
 # )
 #
